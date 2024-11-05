@@ -13,6 +13,10 @@ PASSWORD = os.getenv("DEMOQA_PWD")
 # Setup connection options
 chrome_options = Options()
 chrome_options.add_argument("--disable-search-enghine-choice-screen")
+
+prefs = {"download.default_directory": os.getcwd()}
+chrome_options.add_experimental_option("prefs", prefs)
+
 service = Service("./chromedriver/chromedriver")
 driver = webdriver.Chrome(service=service, options=chrome_options)
 # Open the browser and load page
@@ -59,6 +63,12 @@ permanent_address_field.send_keys(
     "123 Permanent Street, Permanent City, Permanent State, 12345")
 driver.execute_script("arguments[0].click();", submit_button)
 
+# Download file
+upload_and_download = WebDriverWait(driver, 10).until(EC.visibility_of_element_located(
+    (By.CSS_SELECTOR, "#item-7")))
+upload_and_download.click()
+download_button = driver.find_element(By.CSS_SELECTOR, "#downloadButton")
+driver.execute_script("arguments[0].click();", download_button)
 
 input("Press Enter to close the browser")
 driver.quit()
