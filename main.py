@@ -7,11 +7,8 @@ from selenium.webdriver.common.by import By
 import os
 
 
-NAME_SELECTOR="#userName"
-PASSWORD_SELECTOR="#password"
-
-USERNAME=os.getenv("DEMOQA_USER")
-PASSWORD=os.getenv("DEMOQA_PWD")
+USERNAME = os.getenv("DEMOQA_USER")
+PASSWORD = os.getenv("DEMOQA_PWD")
 
 # Setup connection options
 chrome_options = Options()
@@ -22,8 +19,10 @@ driver = webdriver.Chrome(service=service, options=chrome_options)
 driver.get("https://demoqa.com/login")
 
 # Locate controls
-username_input = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, NAME_SELECTOR)))
-pawword_input = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, PASSWORD_SELECTOR)))
+username_input = WebDriverWait(driver, 10).until(
+    EC.visibility_of_element_located((By.CSS_SELECTOR, "#userName")))
+pawword_input = WebDriverWait(driver, 10).until(
+    EC.visibility_of_element_located((By.CSS_SELECTOR, "#password")))
 login_button = driver.find_element(By.CSS_SELECTOR, "#login")
 
 # Fill in and submit the form
@@ -31,6 +30,35 @@ username_input.send_keys(USERNAME)
 pawword_input.send_keys(PASSWORD)
 # login_button.click() – This will allow to avoid the “Element is not clickable” error
 driver.execute_script("arguments[0].click();", login_button)
+
+# Locate the Elements drop-down and Text Box menu
+elements = WebDriverWait(driver, 10).until(EC.visibility_of_element_located(
+    (By.XPATH, '//*[@id="app"]/div/div/div/div[1]/div/div/div[1]/span/div')))
+elements.click()
+text_box = WebDriverWait(driver, 10).until(EC.visibility_of_element_located(
+    (By.CSS_SELECTOR, "#item-0")))
+text_box.click()
+
+# Locata the form fields
+full_name_field = WebDriverWait(driver, 10).until(EC.visibility_of_element_located(
+    (By.CSS_SELECTOR, "#userName")))
+email_field = WebDriverWait(driver, 10).until(EC.visibility_of_element_located(
+    (By.CSS_SELECTOR, "#userEmail")))
+current_address_field = WebDriverWait(driver, 10).until(EC.visibility_of_element_located(
+    (By.CSS_SELECTOR, "#currentAddress")))
+permanent_address_field = WebDriverWait(driver, 10).until(EC.visibility_of_element_located(
+    (By.CSS_SELECTOR, "#permanentAddress")))
+submit_button = driver.find_element(By.CSS_SELECTOR, "#submit")
+
+# Fill in the form fields and submit the form
+full_name_field.send_keys("John Doe")
+email_field.send_keys("john.doe@someemail.com")
+current_address_field.send_keys(
+    "123 Main Street, Some City, Some State, 12345")
+permanent_address_field.send_keys(
+    "123 Permanent Street, Permanent City, Permanent State, 12345")
+driver.execute_script("arguments[0].click();", submit_button)
+
 
 input("Press Enter to close the browser")
 driver.quit()
